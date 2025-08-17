@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: lie-lar-backend
+  
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: lie_lar_db
+      auto-index-creation: true
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+
+# Configuração do Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  info:
+    title: Lie Lar API
+    description: Sistema de Gestão de Materiais Eletrônicos e Construção
+    version: 1.0.0
+    contact:
+      name: Lie Lar Team
+      email: contato@lie-lar.com
+
+# Logging
+logging:
+  level:
+    com.lielar: DEBUG
+    org.springframework.data.mongodb: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
