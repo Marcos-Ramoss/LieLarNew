@@ -1,21 +1,6 @@
 // Script de inicialização do MongoDB para Lie Lar
 // Este script é executado automaticamente quando o container MongoDB é iniciado
 
-// Conectar ao banco admin
-db = db.getSiblingDB('admin');
-
-// Criar usuário para o banco lie_lar_db
-db.createUser({
-  user: 'lie_lar_user',
-  pwd: 'lie_lar_pass',
-  roles: [
-    {
-      role: 'readWrite',
-      db: 'lie_lar_db'
-    }
-  ]
-});
-
 // Conectar ao banco lie_lar_db
 db = db.getSiblingDB('lie_lar_db');
 
@@ -23,6 +8,7 @@ db = db.getSiblingDB('lie_lar_db');
 db.createCollection('users');
 db.createCollection('categories');
 db.createCollection('products');
+db.createCollection('refresh_tokens');
 
 // Criar índices únicos
 db.users.createIndex({ "email": 1 }, { unique: true });
@@ -37,8 +23,11 @@ db.products.createIndex({ "ativo": 1 });
 db.products.createIndex({ "categoria": 1 });
 db.products.createIndex({ "destaque": 1, "ativo": 1 });
 
+// Índices para refresh tokens
+db.refresh_tokens.createIndex({ "token": 1 }, { unique: true });
+db.refresh_tokens.createIndex({ "userId": 1 });
+db.refresh_tokens.createIndex({ "expiresAt": 1 }, { expireAfterSeconds: 0 });
+
 print('✅ Banco de dados Lie Lar inicializado com sucesso!');
 print('📊 Banco: lie_lar_db');
-print('👤 Usuário: lie_lar_user');
-print('🔑 Senha: lie_lar_pass');
-print('🌐 Acesso: mongodb://lie_lar_user:lie_lar_pass@localhost:27017/lie_lar_db');
+print('🌐 Acesso: mongodb://localhost:27017/lie_lar_db');

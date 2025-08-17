@@ -38,5 +38,12 @@ logging:
   level:
     com.lielar: DEBUG
     org.springframework.data.mongodb: DEBUG
+    org.springframework.security: DEBUG
+    com.lielar.infrastructure.security: DEBUG
+    org.springframework.security.web: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Debug Spring Security
+debug: true

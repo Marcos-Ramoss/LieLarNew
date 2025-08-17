@@ -143,6 +143,30 @@ springdoc:
     path: /swagger-ui.html
 ```
 
+## 🔐 Sistema de Autenticação JWT
+
+### Usuário Padrão
+- **Email:** admin@lie-lar.com
+- **Senha:** admin123
+- **Tipo:** admin
+- **Permissões:** Todas (produtos, categorias, usuários, orçamentos, relatórios)
+
+### Endpoints de Autenticação
+- `POST /api/auth/login` - Login do usuário (retorna JWT)
+- `POST /api/auth/refresh` - Renovar access token
+- `POST /api/auth/logout` - Logout (revoga refresh token)
+- `GET /api/auth/health` - Verificar saúde do serviço de auth
+
+### Segurança
+- **JWT (JSON Web Tokens)** com expiração configurável
+- **Access Token:** 15 minutos de duração
+- **Refresh Token:** 7 dias de duração
+- Senhas criptografadas com BCrypt
+- Validação de dados com Bean Validation
+- CORS configurado para desenvolvimento
+- Endpoints protegidos por autenticação JWT
+- Sessões stateless (sem estado no servidor)
+
 ## 📊 Banco de Dados
 
 ### Coleções MongoDB
@@ -180,11 +204,42 @@ curl -X POST http://localhost:8080/api/categorias \
   }'
 ```
 
-### 3. Criar Produto
+### 3. Autenticação JWT
+
+```bash
+# Login (retorna access token e refresh token)
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@lie-lar.com",
+    "senha": "admin123"
+  }'
+
+# Renovar access token
+curl -X POST http://localhost:8080/api/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refreshToken": "SEU_REFRESH_TOKEN_AQUI"
+  }'
+
+# Logout
+curl -X POST "http://localhost:8080/api/auth/logout?refreshToken=SEU_REFRESH_TOKEN_AQUI"
+```
+
+### 4. Usar Access Token
+
+```bash
+# Incluir o access token no header Authorization
+curl -H "Authorization: Bearer SEU_ACCESS_TOKEN_AQUI" \
+  http://localhost:8080/api/produtos
+```
+
+### 5. Criar Produto
 
 ```bash
 curl -X POST http://localhost:8080/api/produtos \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_ACCESS_TOKEN_AQUI" \
   -d '{
     "nome": "Smartphone Samsung",
     "descricao": "Smartphone Samsung Galaxy",
@@ -215,7 +270,10 @@ curl -X POST http://localhost:8080/api/produtos \
 
 ## 🚧 Próximos Passos
 
-- [ ] Implementar sistema de usuários
+- [x] Implementar sistema de usuários
+- [x] Implementar sistema de autenticação
+- [ ] Implementar sistema de autorização com JWT
+- [ ] Implementar refresh tokens
 - [ ] Adicionar autenticação JWT
 - [ ] Implementar validações avançadas
 - [ ] Adicionar testes unitários
